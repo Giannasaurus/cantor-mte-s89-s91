@@ -17,8 +17,17 @@ dns.setServers([
 mongoose.connect(process.env.MONGODB_STRING);
 mongoose.connection.once('open', () => console.log('Now connected to MongoDB Atlas.'))
 
+const allowedOrigins = [
+    'http://localhost:8000',
+    'http://localhost:5173',
+    ...(process.env.CLIENT_URL || '')
+        .split(',')
+        .map(origin => origin.trim())
+        .filter(Boolean),
+]
+
 const corsOptions = {
-    origin: ['http://localhost:8000', 'http://localhost:5173'],
+    origin: allowedOrigins,
     credentials: true,
     optionsSuccessStatus: 200,
 }
